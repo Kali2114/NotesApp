@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Detail</title>
+</head>
+<body>
+    <h1>Note Detail</h1>
+    <p><strong>Title:</strong> {{ note.title }}</p>
+    <p><strong>Content:</strong> {{ note.content }}</p>
+    <p><strong>Priority:</strong> {{ note.priority }}</p>
+    <p><strong>Created Date:</strong> {{ note.created_at }}</p>
+    <a href="{% url 'home' %}?sort_by={{ request.GET.sort_by }}">Back</a>
+    <a href="{% url 'update_note' pk=note.pk %}">Update Note</a>
+    <a href="{% url 'delete_note' pk=note.pk %}">Delete Note</a>
+</body>
+</html>

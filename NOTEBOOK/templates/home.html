@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+</head>
+<body>
+<a href="{% url 'user_profile' %}">Profile</a>
+<h1>Note List:</h1>
+{% if request.GET.query %}
+    {% if not searched_notes %}
+        <p>No notes for "{{ request.GET.query }}"</p>
+    {% endif %}
+{% endif %}
+{% if notes %}
+    <a href="?sort_by=name{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Sort by name</a>
+    <a href="?sort_by=created_at{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Sort by date</a>
+    <a href="?sort_by=priority{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Sort by priority</a>
+    <ul>
+        {% for note in notes %}
+            <li>
+                <a href="{% url 'detail_note' note.pk %}?sort_by={{ sort_by }}">{{ note }}</a>
+                <span style="font-size: 10px;"> {{ note.created_at }}</span>
+                {% if note.pinned %}
+                    <a href="{% url 'unpin_note' note.pk %}">Unpin</a>
+                {% else %}
+                    <a href="{% url 'pin_note' note.pk %}">Pin</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">previous</a>
+            {% endif %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% else %}
+    {% if not request.GET.query %}
+        <p>No notes.</p>
+    {% endif %}
+{% endif %}
+<form method="GET" action="{% url 'home' %}">
+  <input type="text" name="query" placeholder="Search Note..." value="{{ request.GET.query }}">
+  <button type="submit">Search</button>
+</form>
+{% if request.GET.query %}
+    <a href="{% url 'home' %}">Back</a>
+{% else %}
+    <a href="{% url 'add_note' %}">Add Note</a>
+    <a href="{% url 'logout' %}">Logout</a>
+{% endif %}
+</body>
+</html>

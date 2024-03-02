@@ -1,4 +1,4 @@
-NOTENV/
 .idea/
 __pycache__/
 *pyc
+NOTENV/

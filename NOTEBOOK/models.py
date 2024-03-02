@@ -25,7 +25,7 @@ class Category(models.Model):
         ('Other', 'Other')
     ]
 
-    name = models.CharField(max_length=100, choices=CHOICES, unique=True)
+    name = models.CharField(max_length=100, choices=CHOICES, unique=True, default=None)
 
     def __str__(self):
         return self.name
@@ -38,11 +38,13 @@ class Note(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     priority = models.CharField(max_length=10, choices=[
                                                         ('High', 'High'),
-                                                        ('Norma l', 'Normal'),
+                                                        ('Normal', 'Normal'),
                                                         ('Low', 'Low'),
                                                         ('None', 'None')
                                                         ], default='None')
-    category = models.ManyToManyField(Category, related_name='category', blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 related_name='category', blank=True, null=True,
+                                 default=None)
     pinned = models.BooleanField(default=False)
 
     def __str__(self):

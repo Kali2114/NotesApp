@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, TemplateView
 
 from .forms import CustomUserCreationForm
-from .models import Note, UserRating
+from .models import Note, UserRating, Category
 
 
 class AddNoteView(CreateView):
@@ -43,17 +43,22 @@ class HomeView(LoginRequiredMixin, ListView):
         queryset = Note.objects.filter(user=self.request.user)
         query = self.request.GET.get('query')
         sort_by = self.request.GET.get('sort_by')
+        category_name = self.request.GET.get('category')
 
         if query:
             queryset = queryset.filter(title__icontains=query)
 
+        if category_name:
+            queryset = queryset.filter(category__name=category_name)
+
         pinned_notes = queryset.filter(pinned=True)
         unpinned_notes = queryset.filter(pinned=False)
+        pinned_notes = pinned_notes.order_by('title')
 
         if sort_by == 'name':
             unpinned_notes = unpinned_notes.order_by('title')
         elif sort_by == 'date':
-            unpinned_notes = unpinned_notes.order_by('-created_at')
+            unpinned_notes = unpinned_notes.order_by('created_at')
         elif sort_by == 'priority':
             priority_order = {'High': 3, 'Normal': 2, 'Low': 1, 'None': 0}
             unpinned_notes = sorted(unpinned_notes, key=lambda x: priority_order.get(x.priority), reverse=True)
@@ -72,6 +77,8 @@ class HomeView(LoginRequiredMixin, ListView):
         if query:
             context['searched_notes'] = queryset
         context['sort_by'] = sort_by
+        context['categories'] = Category.objects.all()
+        context['current_category'] = self.request.GET.get('category')
         return context
 
 class DetailNoteView(DetailView):

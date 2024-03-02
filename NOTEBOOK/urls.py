@@ -16,4 +16,5 @@ urlpatterns = [
     path('pin/<int:pk>', pin_note, name='pin_note'),
     path('unpin/<int:pk>', unpin_note, name='unpin_note'),
     path('user_profile/', UserProfileView.as_view(), name='user_profile'),
+    path('category/<str:category_name>/', HomeView.as_view(), name='category_notes'),
 ]

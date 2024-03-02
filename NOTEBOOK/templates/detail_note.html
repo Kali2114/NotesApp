@@ -10,6 +10,12 @@
     <p><strong>Title:</strong> {{ note.title }}</p>
     <p><strong>Content:</strong> {{ note.content }}</p>
     <p><strong>Priority:</strong> {{ note.priority }}</p>
+    <p><strong>Category:</strong> {{ note.category }}</p>
+    {% if note.pinned %}
+    <p><strong>Pinned:</strong> Yes</p>
+    {% else %}
+    <p><strong>Pinned:</strong> No</p>
+    {% endif %}
     <p><strong>Created Date:</strong> {{ note.created_at }}</p>
     <a href="{% url 'home' %}?sort_by={{ request.GET.sort_by }}">Back</a>
     <a href="{% url 'update_note' pk=note.pk %}">Update Note</a>

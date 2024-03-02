@@ -6,4 +6,3 @@ admin.site.register(Note)
 admin.site.register(CustomUser)
 admin.site.register(UserRating)
 admin.site.register(Category)
-

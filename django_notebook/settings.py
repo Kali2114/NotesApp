@@ -76,10 +76,14 @@ WSGI_APPLICATION = 'django_notebook.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+      'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'notedb',
+        'USER': 'postgres',
+        'PASSWORD': '553355',
+        'HOST': 'localhost',
+        'PORT': '5432',
+      }
 }
 
 

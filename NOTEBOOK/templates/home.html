@@ -7,19 +7,25 @@
 <body>
 <a href="{% url 'user_profile' %}">Profile</a>
 <h1>Note List:</h1>
+
 {% if request.GET.query %}
     {% if not searched_notes %}
         <p>No notes for "{{ request.GET.query }}"</p>
     {% endif %}
 {% endif %}
-{% if notes %}
     <a href="?sort_by=name{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Sort by name</a>
     <a href="?sort_by=created_at{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Sort by date</a>
     <a href="?sort_by=priority{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Sort by priority</a>
+    <br>
+    {% for category in categories %}
+        <a href="?category={{ category.name }}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}">{{ category.name }}</a>
+    {% endfor %}
+{% if notes %}
     <ul>
         {% for note in notes %}
             <li>
                 <a href="{% url 'detail_note' note.pk %}?sort_by={{ sort_by }}">{{ note }}</a>
+                <span style="font-size: 10px;">Category: {{ note.category }}</span>
                 <span style="font-size: 10px;"> {{ note.created_at }}</span>
                 {% if note.pinned %}
                     <a href="{% url 'unpin_note' note.pk %}">Unpin</a>
@@ -53,11 +59,7 @@
   <input type="text" name="query" placeholder="Search Note..." value="{{ request.GET.query }}">
   <button type="submit">Search</button>
 </form>
-{% if request.GET.query %}
-    <a href="{% url 'home' %}">Back</a>
-{% else %}
     <a href="{% url 'add_note' %}">Add Note</a>
     <a href="{% url 'logout' %}">Logout</a>
-{% endif %}
 </body>
 </html>
